@@ -1,0 +1,24 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    secret: '%env(APP_SECRET)%'
+
+    # Note that the session will be started ONLY if you read or write from it.
+    session:
+        handler_id: '%env(REDIS_URL)%'
+        save_path: '%env(REDIS_URL)%'
+        cookie_lifetime: 3600
+        gc_maxlifetime: 3600
+        cookie_secure: auto
+        cookie_httponly: true
+        cookie_samesite: strict
+        gc_probability: 1
+        gc_divisor: 100
+
+    #esi: true
+    #fragments: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
