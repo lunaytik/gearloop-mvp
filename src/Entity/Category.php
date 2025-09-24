@@ -25,8 +25,8 @@ class Category
     #[Assert\Length(
         min: 3,
         max: 100,
-        minMessage: "Name must be at least {{ limit }} characters long.",
-        maxMessage: "Name must be at least {{ limit }} characters long."
+        minMessage: 'Name must be at least {{ limit }} characters long.',
+        maxMessage: 'Name cannot be longer than {{ limit }} characters.'
     )]
     #[ORM\Column(length: 100)]
     private ?string $name = null;
@@ -34,23 +34,24 @@ class Category
     #[Assert\Length(
         min: 3,
         max: 100,
-        minMessage: "Name must be at least {{ limit }} characters long.",
-        maxMessage: "Name must be at least {{ limit }} characters long."
+        minMessage: 'Slug must be at least {{ limit }} characters long.',
+        maxMessage: 'Slug cannot be longer than {{ limit }} characters.'
     )]
     #[ORM\Column(length: 100, unique: true)]
     private ?string $slug = null;
 
     #[Assert\Length(
         max: 30,
-        maxMessage: 'Icon value cannot be longer than {{ limit }} characters'
+        maxMessage: 'Icon cannot be longer than {{ limit }} characters.'
     )]
     #[ORM\Column(length: 30, nullable: true)]
     private ?string $icon = null;
 
-    #[Assert\Regex(pattern: '/^#[a-fA-F0-9]{6}$/', message: 'Invalid color format, HEX (e.g., #FFFFFF)')]
+    #[Assert\Regex(pattern: '/^#[a-fA-F0-9]{6}$/', message: 'Invalid color format, HEX (e.g., #FFFFFF).')]
     #[ORM\Column(length: 7, nullable: true)]
     private ?string $color = null;
 
+    #[Assert\PositiveOrZero(message: 'Position must be greater than or equal to 0.')]
     #[ORM\Column]
     private int $position;
 
@@ -73,6 +74,12 @@ class Category
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $children;
 
+    /**
+     * @var Collection<int, Item>
+     */
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'category')]
+    private Collection $items;
+
     public function __construct()
     {
         $now = new DatePoint();
@@ -81,6 +88,7 @@ class Category
         $this->isActive = true;
         $this->position = 0;
         $this->children = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     #[ORM\PreUpdate]
@@ -237,6 +245,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($child->getParent() === $this) {
                 $child->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Item>
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(Item $item): static
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Item $item): static
+    {
+        if ($this->items->removeElement($item)) {
+            // set the owning side to null (unless already changed)
+            if ($item->getCategory() === $this) {
+                $item->setCategory(null);
             }
         }
 

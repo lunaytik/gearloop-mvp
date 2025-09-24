@@ -75,6 +75,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $location = null;
 
     #[Assert\Url(message: 'Avatar URL is not valid.')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Image URL cannot be longer than {{ limit }} characters'
+    )]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
