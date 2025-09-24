@@ -8,10 +8,13 @@ use App\Entity\Item;
 use App\Entity\ItemVariant;
 use App\Enum\ItemStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ItemFixtures extends Fixture
+class ItemFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const string ITEM_REFERENCE = 'item';
+
     public function load(ObjectManager $manager): void
     {
         $items = ItemData::getItems();
@@ -39,9 +42,17 @@ class ItemFixtures extends Fixture
                         ->setSpecifications($variantData['specifications'] ?? null)
                         ->setIsDefault($key == 0);
 
-                    $item->addItemVariant($variant);
+                    $variant->setItem($item);
+                    $manager->persist($variant);
+                    $this->setReference(self::ITEM_REFERENCE . '_' . 1, $variant);
                 }
+            } else {
+                $variant = new ItemVariant();
+                $variant->setName('Default');
+                $variant->setItem($item);
+                $manager->persist($variant);
             }
+
 
             $manager->persist($item);
         }
