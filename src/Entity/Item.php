@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\ItemStatus;
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Clock\DatePoint;
@@ -18,7 +20,6 @@ class Item
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
 
     #[Assert\NotBlank(message: "Name is required.")]
     #[Assert\Length(
@@ -95,12 +96,19 @@ class Item
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Category $category = null;
 
+    /**
+     * @var Collection<int, ItemVariant>
+     */
+    #[ORM\OneToMany(targetEntity: ItemVariant::class, mappedBy: 'item')]
+    private Collection $itemVariants;
+
     public function __construct()
     {
         $now = new DatePoint();
         $this->createdAt = $now;
         $this->updatedAt = $now;
         $this->isActive = true;
+        $this->itemVariants = new ArrayCollection();
     }
 
     #[ORM\PreUpdate]
@@ -260,6 +268,36 @@ class Item
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ItemVariant>
+     */
+    public function getItemVariants(): Collection
+    {
+        return $this->itemVariants;
+    }
+
+    public function addItemVariant(ItemVariant $itemVariant): static
+    {
+        if (!$this->itemVariants->contains($itemVariant)) {
+            $this->itemVariants->add($itemVariant);
+            $itemVariant->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItemVariant(ItemVariant $itemVariant): static
+    {
+        if ($this->itemVariants->removeElement($itemVariant)) {
+            // set the owning side to null (unless already changed)
+            if ($itemVariant->getItem() === $this) {
+                $itemVariant->setItem(null);
+            }
+        }
 
         return $this;
     }

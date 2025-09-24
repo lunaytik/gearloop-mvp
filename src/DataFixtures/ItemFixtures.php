@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\DataFixtures\Data\ItemData;
 use App\Entity\Category;
 use App\Entity\Item;
+use App\Entity\ItemVariant;
 use App\Enum\ItemStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -27,6 +28,20 @@ class ItemFixtures extends Fixture
 //                ->setImageUrl($itemData['imageUrl'] ?? null)
                 ->setSpecifications($itemData['specifications'] ?? null)
                 ->setCategory($category);
+
+            if ($itemData['variants']) {
+                foreach ($itemData['variants'] as $key => $variantData) {
+                    $variant = new ItemVariant();
+                    $variant->setName($variantData['name'])
+                        ->setSku($variantData['sku'] ?? null)
+                        ->setWeight($variantData['weight'] ?? null)
+                        ->setPrice($variantData['price'] ?? null)
+                        ->setSpecifications($variantData['specifications'] ?? null)
+                        ->setIsDefault($key == 0);
+
+                    $item->addItemVariant($variant);
+                }
+            }
 
             $manager->persist($item);
         }
