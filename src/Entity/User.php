@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\ExperienceLevel;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -92,11 +94,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'date_point')]
     private ?DatePoint $updatedAt = null;
 
+    /**
+     * @var Collection<int, Kit>
+     */
+    #[ORM\OneToMany(targetEntity: Kit::class, mappedBy: 'owner')]
+    private Collection $kits;
+
     public function __construct()
     {
         $now = new DatePoint();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+        $this->kits = new ArrayCollection();
     }
 
     #[ORM\PreUpdate]
@@ -266,5 +275,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUpdatedAt(): ?DatePoint
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return Collection<int, Kit>
+     */
+    public function getKits(): Collection
+    {
+        return $this->kits;
+    }
+
+    public function addKit(Kit $kit): static
+    {
+        if (!$this->kits->contains($kit)) {
+            $this->kits->add($kit);
+            $kit->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeKit(Kit $kit): static
+    {
+        if ($this->kits->removeElement($kit)) {
+            // set the owning side to null (unless already changed)
+            if ($kit->getOwner() === $this) {
+                $kit->setOwner(null);
+            }
+        }
+
+        return $this;
     }
 }
