@@ -44,7 +44,7 @@ class ItemFixtures extends Fixture implements DependentFixtureInterface
 
                     $variant->setItem($item);
                     $manager->persist($variant);
-                    $this->setReference(self::ITEM_REFERENCE . '_' . 1, $variant);
+                    $this->setReference(self::ITEM_REFERENCE . '_' . $variant->getSku(), $variant);
                 }
             } else {
                 $variant = new ItemVariant();
