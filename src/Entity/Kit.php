@@ -74,7 +74,7 @@ class Kit
     /**
      * @var Collection<int, KitItem>
      */
-    #[ORM\OneToMany(targetEntity: KitItem::class, mappedBy: 'kit', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: KitItem::class, mappedBy: 'kit', cascade: ['persist'], orphanRemoval: true)]
     private Collection $kitItems;
 
     public function __construct()
