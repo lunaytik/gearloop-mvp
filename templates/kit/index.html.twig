@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kit index{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold">Kit index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>IsPublic</th>
+                <th>Stats</th>
+                <th>ActivityType</th>
+                <th>Season</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Owner</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for kit in kits %}
+            <tr>
+                <td>{{ kit.id }}</td>
+                <td>{{ kit.name }}</td>
+                <td>{{ kit.slug }}</td>
+                <td>{{ kit.description }}</td>
+                <td>{{ kit.isPublic ? 'Yes' : 'No' }}</td>
+                <td>{{ kit.stats ? kit.stats|json_encode : '' }}</td>
+                <td>{{ kit.activityType.label }}</td>
+                <td>{{ kit.season.label }}</td>
+                <td>{{ kit.createdAt|date }}</td>
+                <td>{{ kit.updatedAt|date }}</td>
+                <td>{{ kit.owner.displayName }}</td>
+                <td>
+                    <a class="btn btn-success btn-wide" href="{{ path('app_kit_show', {'id': kit.id}) }}">show</a>
+                    <a class="btn btn-info btn-wide" href="{{ path('app_kit_edit', {'id': kit.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn" href="{{ path('app_kit_new') }}">Create new</a>
+{% endblock %}
