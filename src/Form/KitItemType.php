@@ -25,7 +25,6 @@ class KitItemType extends AbstractType
                     return $variant->getItem()->getName() . ' - ' . $variant->getItem()->getName();
                 },
                 'choice_value' => 'id',
-                'attr' => ['data-filter-target' => 'variant']
             ])
             ->add('quantity', NumberType::class)
             ->add('personalNotes', TextAreaType::class, [

@@ -13,7 +13,7 @@ export default class extends Controller {
 
      addTagFormDeleteLink(item) {
         const removeFormButton = document.createElement('button');
-        removeFormButton.innerText = 'Delete this tag';
+        removeFormButton.innerText = 'Delete this item';
 
         item.append(removeFormButton);
 

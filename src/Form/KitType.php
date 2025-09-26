@@ -40,12 +40,6 @@ class KitType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'prototype' => true,
-                'prototype_options' => [
-                    'attr' => [
-                        'data-controller' => 'filter'
-                    ]
-                ]
             ]);
 //            ->add('owner', EntityType::class, [
 //                'class' => User::class,

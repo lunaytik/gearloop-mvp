@@ -12,14 +12,12 @@
         <ul class="kit-items" {{ stimulus_target('form-collection', 'collectionContainer') }}>
             {% for kitItem in form.kitItems %}
                 <div data-controller="filter">
-                    {{ form_row(kitItem.category, {'attr': {'data-filter-target': 'category'}}) }}
-                    {{ form_row(kitItem.item, {'attr': {'data-filter-target': 'item'}}) }}
-                    {{ form_row(kitItem.variant, {'attr': {'data-filter-target': 'variant'}}) }}
+                    {{ form_row(kitItem.variant) }}
                     {{ form_row(kitItem) }}
                 </div>
             {% endfor %}
         </ul>
-        <button type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add a tag</button>
+        <button type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add an item</button>
     </div>
 
     <button class="btn">{{ button_label|default('Save') }}</button>
