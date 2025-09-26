@@ -14,7 +14,9 @@
         <nav>
             <ul>
                 <li>
+                    <a href="{{ path('app_kit_index') }}">Explore</a>
                     {% if app.user %}
+                        <div>{{ app.user.username }} ({{ app.user.email }})</div>
                         <a href="{{ path('app_logout') }}">Logout</a>
                     {% else %}
                         <a href="{{ path('app_login') }}">Login</a>
