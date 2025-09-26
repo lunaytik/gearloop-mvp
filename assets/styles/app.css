@@ -1,3 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@plugin "@tailwindcss/forms"
+@plugin "@tailwindcss/forms";
+@plugin "../vendor/daisyui/daisyui.index.js" {
+    themes: lemonade --default;
+    --radius-field: 0.5rem;
+}
