@@ -14,6 +14,7 @@ class KitStatsCalculator
             'total_weight' => 0,
             'total_price' => 0.0,
             'items_count' => 0,
+            'unique_items_count' => 0,
             'category_breakdown' => [],
             'calculated_at' => (new DatePoint()),
         ];
@@ -39,6 +40,7 @@ class KitStatsCalculator
         $stats['total_weight'] += $itemWeight;
         $stats['total_price'] += $itemPrice;
         $stats['items_count'] += $quantity;
+        $stats['unique_items_count']++;
 
         $categoryName = $category->getName();
         if (!isset($stats['category_breakdown'][$categoryName])) {
