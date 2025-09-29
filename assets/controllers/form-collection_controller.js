@@ -14,6 +14,7 @@ export default class extends Controller {
      addTagFormDeleteLink(item) {
         const removeFormButton = document.createElement('button');
         removeFormButton.innerText = 'Delete this item';
+        removeFormButton.classList.add('btn', 'btn-error', 'btn-sm');
 
         item.append(removeFormButton);
 
@@ -28,8 +29,9 @@ export default class extends Controller {
 
     addCollectionElement(event)
     {
-        const item = document.createElement('li');
+        const item = document.createElement('div');
         item.innerHTML = this.prototypeValue.replace(/__name__/g, this.indexValue);
+        item.classList.add('flex', 'flex-col', 'gap-2', 'p-4', 'bg-base-200', 'border', 'border-base-300', 'rounded-field');
         this.collectionContainerTarget.appendChild(item);
         this.indexValue++;
         this.addTagFormDeleteLink(item);
@@ -39,7 +41,7 @@ export default class extends Controller {
     connect()
     {
         document
-            .querySelectorAll('ul.kit-items li')
+            .querySelectorAll('div.kit-items > div')
             .forEach((tag) => {
                 this.addTagFormDeleteLink(tag)
             })

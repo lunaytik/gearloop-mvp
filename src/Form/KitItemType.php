@@ -25,10 +25,14 @@ class KitItemType extends AbstractType
                     return $variant->getItem()->getName() . ' - ' . $variant->getName();
                 },
                 'choice_value' => 'id',
+                'attr' => ['class' => 'select w-full'],
             ])
-            ->add('quantity', NumberType::class)
+            ->add('quantity', NumberType::class, [
+                'attr' => ['class' => 'input w-full'],
+            ])
             ->add('personalNotes', TextAreaType::class, [
                 'required' => false,
+                'attr' => ['class' => 'textarea w-full'],
             ])
         ;
     }

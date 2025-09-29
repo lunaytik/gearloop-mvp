@@ -1,24 +1,40 @@
-{{ form_start(form) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.description) }}
-    {{ form_row(form.isPublic) }}
-    {{ form_row(form.activityType) }}
-    {{ form_row(form.season) }}
+{{ form_start(form, {'attr': {'class': 'flex flex-col gap-4 pt-4 lg:mx-auto'}}) }}
 
-    <div {{ stimulus_controller('form-collection') }}
-        data-form-collection-index-value="{{ form.kitItems|length > 0 ? form.kitItems|last.vars.name + 1 : 0 }}"
-        data-form-collection-prototype-value="{{ form_widget(form.kitItems.vars.prototype)|e('html_attr') }}"
-    >
-        <ul class="kit-items" {{ stimulus_target('form-collection', 'collectionContainer') }}>
-            {% for kitItem in form.kitItems %}
-                <div data-controller="filter">
-                    {{ form_row(kitItem.variant) }}
-                    {{ form_row(kitItem) }}
-                </div>
-            {% endfor %}
-        </ul>
-        <button type="button" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add an item</button>
+<div class="flex flex-col gap-4">
+    <div class="flex flex-wrap flex-col md:flex-row gap-4 md:items-center md:justify-between">
+        {{ form_row(form.name, {'row_attr': {'class': 'flex flex-col'}}) }}
+        {{ form_row(form.isPublic, {'row_attr': {'class': 'flex gap-2'}}) }}
     </div>
+    {{ form_row(form.description, {'row_attr': {'class': 'flex flex-col'}}) }}
+    <div class="flex flex-wrap flex-col md:flex-row gap-4">
+        {{ form_row(form.activityType, {'row_attr': {'class': 'flex flex-col flex-1'}}) }}
+        {{ form_row(form.season, {'row_attr': {'class': 'flex flex-col flex-1'}}) }}
+    </div>
+</div>
 
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div
+    class="flex flex-col gap-4"
+    {{ stimulus_controller('form-collection') }}
+    data-form-collection-index-value="{{ form.kitItems|length > 0 ? form.kitItems|last.vars.name + 1 : 0 }}"
+    data-form-collection-prototype-value="{{ form_widget(form.kitItems.vars.prototype)|e('html_attr') }}"
+
+>
+    <div class="sticky top-0 z-10 bg-base-100 p-4 flex items-center justify-between">
+        <h3 class="text-lg font-bold">Kit Items</h3>
+        <button type="button" class="btn btn-primary mt-2" id="add-kititem" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add Item</button>
+    </div>
+    <div class="kit-items grid grid-cols-1 lg:grid-cols-2 gap-8" {{ stimulus_target('form-collection', 'collectionContainer') }}>
+        {% for kitItem in form.kitItems %}
+            <div class="flex flex-col gap-2 p-4 bg-base-200 border border-base-300 rounded-field">
+                {{ form_row(kitItem.variant) }}
+                {{ form_row(kitItem.quantity) }}
+                {{ form_row(kitItem.personalNotes) }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{{ form_row(form._token) }}
+
+<button type="submit" class="btn btn-success lg:w-50 lg:self-start">{{ button_label|default('Save') }}</button>
+{{ form_end(form, {render_rest: false}) }}

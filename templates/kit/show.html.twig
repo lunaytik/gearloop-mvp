@@ -1,9 +1,122 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Kit{% endblock %}
+{% block title %}Kit - {{ kit.name }}{% endblock %}
 
 {% block body %}
-    <h1>Kit</h1>
+    <div class="p-6 flex flex-col gap-6">
+        <div class="card w-full border border-base-300 shadow-sm overflow-hidden">
+            <div class="p-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold">{{ kit.name }}</h1>
+                {# TODO:: ON USER PROFILE CONTROLLER ROUTE ADD LINK #}
+                <a href="{{ path('app_kit_edit', {'id': kit.owner.id}) }}"
+                   class="avatar tooltip tooltip-bottom"
+                   data-tip="{{ kit.owner.username }}">
+                    <div class="w-12 rounded-full border-2 border-white">
+                        <img src="{{ kit.owner.avatar }}" alt="{{ kit.owner.username }} avatar">
+                    </div>
+                </a>
+            </div>
+
+            <div class="card-body bg-base-100 px-4 py-6">
+                <p class="text-base-content/80 mb-4">{{ kit.description }}</p>
+                <div class="flex flex-wrap gap-4 mb-4 text-sm">
+                <span class="badge badge-outline {{ kit.isPublic ? 'badge-success' : 'badge-error' }}">
+                    {{ kit.isPublic ? 'Public' : 'Private' }}
+                </span>
+                    <span class="badge badge-primary">{{ kit.activityType.label }}</span>
+                    <span class="badge badge-secondary">{{ kit.season.label }}</span>
+                </div>
+
+                <div class="flex justify-between items-center">
+                <p class="text-base-content/70 text-sm">Updated {{ kit.updatedAt|date }}</p>
+                    {% if app.user == kit.owner %}
+                        <div class="flex items-end gap-2">
+                            <a href="{{ path('app_kit_edit', {'id': kit.id}) }}"
+                               class="btn btn-primary">Edit</a>
+                            {{ include('kit/_delete_form.html.twig') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Stats card #}
+        <div class="card w-full border border-base-300 shadow-sm p-6 bg-base-100">
+            <h2 class="text-xl font-bold mb-4">Stats</h2>
+            {% if kit.stats %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <p class="font-medium text-base-content/80">Items count</p>
+                    <p>{{ kit.stats.items_count }}</p>
+                </div>
+                <div>
+                    <p class="font-medium text-base-content/80">Unique items</p>
+                    <p>{{ kit.stats.unique_items_count }}</p>
+                </div>
+                <div>
+                    <p class="font-medium text-base-content/80">Total price</p>
+                    <p>${{ kit.stats.total_price|number_format(2) }}</p>
+                </div>
+                <div>
+                    <p class="font-medium text-base-content/80">Total weight</p>
+                    <p>{{ kit.stats.total_weight }} g</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold mb-2">Category Breakdown</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for category, data in kit.stats.category_breakdown %}
+                    <div class="card p-4 border border-base-300 bg-base-200/70 shadow-sm">
+                        <div class="flex items-center gap-2 mb-2">
+{#                            <span class="text-xl">{{ data.icon }}</span>#}
+                            <span class="font-medium">{{ category }}</span>
+                        </div>
+                        <p>Count: {{ data.count }}</p>
+                        <p>Price: ${{ data.price|number_format(2) }}</p>
+                        <p>Weight: {{ data.weight }} g ({{ data.weight_percentage }}%)</p>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <div class="text-center mb-4">No stats yet. Add items in your kit to get your stats !</div>
+            {% endif %}
+        </div>
+
+        {# Kit items list #}
+        <div class="card w-full border border-base-300 shadow-sm p-6 bg-base-100">
+            <h2 class="text-xl font-bold mb-4">Kit Items</h2>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Variant</th>
+                        <th>Quantity</th>
+                        <th>Personal Notes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for kitItem in kit.kitItems %}
+                        <tr class="hover">
+                            <td>{{ kitItem.variant.item.name }}</td>
+                            <td>{{ kitItem.variant.name }}</td>
+                            <td>{{ kitItem.quantity }}</td>
+                            <td>{{ kitItem.personalNotes }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-base-content/70 text-center">No items in this kit.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    {#<h1>Kit</h1>
 
     <table class="table">
         <tbody>
@@ -54,5 +167,5 @@
 
     <a class="btn btn-info" href="{{ path('app_kit_edit', {'id': kit.id}) }}">edit</a>
 
-    {{ include('kit/_delete_form.html.twig') }}
+    {{ include('kit/_delete_form.html.twig') }}#}
 {% endblock %}

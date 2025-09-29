@@ -19,20 +19,27 @@ class KitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class)
+            ->add('name', TextType::class, [
+                'attr' => ['class' => 'input w-full md:w-md'],
+            ])
             ->add('description', TextAreaType::class, [
                 'required' => false,
+                'attr' => ['class' => 'textarea w-full'],
             ])
             ->add('isPublic', CheckboxType::class, [
+                'label' => 'Public',
                 'required' => false,
+                'attr' => ['class' => 'toggle toggle-primary'],
             ])
             ->add('activityType', EnumType::class, [
                 'class' => ActivityType::class,
                 'choice_label' => 'label',
+                'attr' => ['class' => 'select w-full'],
             ])
             ->add('season', EnumType::class, [
                 'class' => Season::class,
                 'choice_label' => 'label',
+                'attr' => ['class' => 'select w-full'],
             ])
             ->add('kitItems', CollectionType::class, [
                 'entry_type' => KitItemType::class,
