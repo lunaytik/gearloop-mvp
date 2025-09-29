@@ -22,7 +22,7 @@ class KitItemType extends AbstractType
             ->add('variant', EntityType::class, [
                 'class' => ItemVariant::class,
                 'choice_label' => function (ItemVariant $variant) {
-                    return $variant->getItem()->getName() . ' - ' . $variant->getItem()->getName();
+                    return $variant->getItem()->getName() . ' - ' . $variant->getName();
                 },
                 'choice_value' => 'id',
             ])
