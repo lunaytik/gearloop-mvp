@@ -41,11 +41,6 @@ class KitType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
             ]);
-//            ->add('owner', EntityType::class, [
-//                'class' => User::class,
-//                'choice_label' => 'id',
-//            ])
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
