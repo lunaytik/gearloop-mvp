@@ -37,7 +37,7 @@ class Kit
         minMessage: "Name must be at least {{ limit }} characters long.",
         maxMessage: "Name cannot be longer than {{ limit }} characters."
     )]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[Assert\Length(

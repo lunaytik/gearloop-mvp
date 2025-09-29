@@ -4,19 +4,19 @@ namespace App\EventListener;
 
 use App\Entity\Category;
 use App\Entity\Kit;
-use App\Repository\KitRepository;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Ulid;
 
 #[AsEntityListener(event: Events::prePersist, method: 'prePersist', entity: Category::class)]
 #[AsEntityListener(event: Events::preUpdate, method: 'preUpdate', entity: Category::class)]
 #[AsEntityListener(event: Events::prePersist, method: 'prePersistKit', entity: Kit::class)]
 final class SlugGeneratorListener
 {
-    public function __construct(private SluggerInterface $slugger, private KitRepository $kitRepository)
+    public function __construct(private SluggerInterface $slugger)
     {
     }
 
@@ -36,17 +36,10 @@ final class SlugGeneratorListener
 
     public function prePersistKit(Kit $kit, PrePersistEventArgs $args): void
     {
-        $slugExist = $this->kitRepository->findOneBy(['slug' => $kit->getSlug()]);
+        $ulid = new Ulid();
+        $shortUid = substr($ulid->toBase32(), 0, 8);
 
-        // TODO:: CHANGE FOR REWRITE WITH 1, 2...
-        if ($slugExist) {
-            $slug = $this->slugger->slug($kit->getName())->lower()->toString();
-            $slug .= '-' . $kit->getId();
-            $kit->setSlug($slug);
-        } else {
-            $slug = $this->slugger->slug($kit->getName())->lower()->toString();
-            $kit->setSlug($slug);
-        }
-
+        $slug = $this->slugger->slug($kit->getName() . '-' . $shortUid)->lower()->toString();
+        $kit->setSlug($slug);
     }
 }
