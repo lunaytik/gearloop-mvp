@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kit New{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold">Create new Kit</h1>
+    {{ include('kit/_form.html.twig') }}
+    <a class="btn btn-neutral my-4" href="{{ path('app_kit_index') }}">Back to list</a>
+{% endblock %}

@@ -37,7 +37,7 @@ class Kit
         minMessage: "Name must be at least {{ limit }} characters long.",
         maxMessage: "Name cannot be longer than {{ limit }} characters."
     )]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
 
     #[Assert\Length(
@@ -74,7 +74,7 @@ class Kit
     /**
      * @var Collection<int, KitItem>
      */
-    #[ORM\OneToMany(targetEntity: KitItem::class, mappedBy: 'kit', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: KitItem::class, mappedBy: 'kit', cascade: ['persist'], orphanRemoval: true)]
     private Collection $kitItems;
 
     public function __construct()

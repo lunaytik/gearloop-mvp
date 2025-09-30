@@ -11,19 +11,29 @@
         {% endblock %}
     </head>
     <body>
-        <nav>
-            <ul>
-                <li>
-                    {% if app.user %}
-                        <a href="{{ path('app_logout') }}">Logout</a>
-                    {% else %}
-                        <a href="{{ path('app_login') }}">Login</a>
-                        <a href="{{ path('app_register') }}">Register</a>
-                    {% endif %}
-                </li>
-            </ul>
-        </nav>
-        <main class="container">
+        <header class="navbar bg-base-200 shadow-sm p-4">
+            <div class="flex-1">
+                <a class="text-xl link link-hover" href="{{ path('app_home_index') }}">BackpackShare</a>
+            </div>
+            <nav class="hidden sm:block">
+                <ul class="flex gap-8 justify-between">
+                    <li class="flex items-center gap-4">
+                        <a class="link link-hover" href="{{ path('app_kit_index') }}">Explore</a>
+                        <a class="link link-hover" href="{{ path('app_item_index') }}">Items</a>
+                    </li>
+                    <li class="flex items-center gap-4">
+                        {% if app.user %}
+                            <div>{{ app.user.username }} ({{ app.user.email }})</div>
+                            <a class="link link-hover" href="{{ path('app_logout') }}">Logout</a>
+                        {% else %}
+                            <a class="link link-hover" href="{{ path('app_login') }}">Login</a>
+                            <a class="link link-hover" href="{{ path('app_register') }}">Register</a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <main class="container px-4 sm:px-0 sm:mx-auto pt-4">
             {% block body %}{% endblock %}
         </main>
     </body>

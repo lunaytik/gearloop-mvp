@@ -19,7 +19,7 @@ enum Season: string
             self::SPRING => 'Spring',
             self::SUMMER => 'Summer',
             self::THREE_SEASONS => '3 Seasons',
-            self::FOUR_SEASONS => '4 Season',
+            self::FOUR_SEASONS => '4 Seasons',
         };
     }
 }
