@@ -1,0 +1,40 @@
+{{ form_start(form, {'attr': {'class': 'flex flex-col gap-4 pt-4 lg:mx-auto'}}) }}
+
+<div class="flex flex-col gap-4">
+    {{ form_row(form.name, {'row_attr': {'class': 'flex flex-col'}}) }}
+    <div class="flex flex-wrap flex-col md:flex-row gap-4 md:items-center">
+        {{ form_row(form.brand, {'row_attr': {'class': 'flex flex-col md:flex-1'}}) }}
+        {{ form_row(form.model, {'row_attr': {'class': 'flex flex-col md:flex-1'}}) }}
+    </div>
+    <div class="flex flex-wrap flex-col md:flex-row gap-4">
+        {{ form_row(form.category, {'row_attr': {'class': 'flex flex-col flex-1'}}) }}
+        {{ form_row(form.imageUrl, {'row_attr': {'class': 'flex flex-col flex-1'}}) }}
+    </div>
+    {{ form_row(form.description, {'row_attr': {'class': 'flex flex-col'}}) }}
+    {{ form_row(form.specifications, {'row_attr': {'class': 'flex flex-col'}}) }}
+</div>
+
+<div
+    class="flex flex-col gap-4"
+    {{ stimulus_controller('form-collection') }}
+    data-form-collection-index-value="{{ form.itemVariants|length > 0 ? form.itemVariants|last.vars.name + 1 : 0 }}"
+    data-form-collection-prototype-value="{{ form_widget(form.itemVariants.vars.prototype)|e('html_attr') }}"
+
+>
+    <div class="sticky top-0 z-10 bg-base-100 p-4 flex items-center justify-between">
+        <h3 class="text-lg font-bold">Variants</h3>
+        <button type="button" class="btn btn-primary mt-2" id="add-kititem" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add Item</button>
+    </div>
+    <div class="collection grid grid-cols-1 lg:grid-cols-2 gap-8" {{ stimulus_target('form-collection', 'collectionContainer') }}>
+        {% for variant in form.itemVariants %}
+            <div class="flex flex-col gap-2 p-4 bg-base-200 border border-base-300 rounded-field">
+                {{ form_widget(variant, {'attr': {'class': 'flex flex-col gap-2'}}) }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{{ form_widget(form) }}
+
+<button type="submit" class="btn btn-success lg:w-50 lg:self-start">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

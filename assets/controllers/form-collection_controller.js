@@ -8,9 +8,6 @@ export default class extends Controller {
         prototype: String,
     }
 
-
-
-
      addTagFormDeleteLink(item) {
         const removeFormButton = document.createElement('button');
         removeFormButton.innerText = 'Delete this item';
@@ -20,12 +17,9 @@ export default class extends Controller {
 
         removeFormButton.addEventListener('click', (e) => {
             e.preventDefault();
-            // remove the li for the tag form
             item.remove();
         });
     }
-
-
 
     addCollectionElement(event)
     {
@@ -41,7 +35,7 @@ export default class extends Controller {
     connect()
     {
         document
-            .querySelectorAll('div.kit-items > div')
+            .querySelectorAll('div.collection > div')
             .forEach((tag) => {
                 this.addTagFormDeleteLink(tag)
             })

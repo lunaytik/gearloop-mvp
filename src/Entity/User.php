@@ -114,6 +114,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->updatedAt = new DatePoint();
     }
 
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->roles);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

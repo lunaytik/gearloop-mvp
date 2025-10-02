@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Item - Edit {{ item.name }}{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold">Edit Item - {{ item.name }}</h1>
+    {{ include('item/_form.html.twig', {'button_label': 'Update'}) }}
+    <a class="btn btn-neutral my-4" href="{{ path('app_item_index') }}">Back to list</a>
+{% endblock %}

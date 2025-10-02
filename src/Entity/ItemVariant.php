@@ -74,6 +74,7 @@ class ItemVariant
         $now = new DatePoint();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+        $this->isDefault = false;
     }
 
     #[ORM\PreUpdate]
