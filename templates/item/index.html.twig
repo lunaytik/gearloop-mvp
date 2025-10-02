@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Item - Index{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6">
+        <h1 class="text-3xl font-bold">Equipment Index</h1>
+        <a class="btn" href="{{ path('app_item_new') }}">Create new</a>
+    </div>
+    <div class="grid gap-6 p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {% for item in items %}
+            <div
+                class="card bg-base-100 text-base-content shadow-md border border-base-300
+                hover:shadow-lg hover:bg-base-200/50 transition duration-300"
+            >
+                {% if item.imageUrl %}
+                    <figure class="px-4 pt-4">
+                        <img src="{{ item.imageUrl ?? '/images/default-item.png' }}" alt="{{ item.name }}" class="rounded-xl h-40 w-full object-cover">
+                    </figure>
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title text-primary">
+                        {{ item.name }}
+                    </h2>
+                    <p class="text-sm text-neutral">{{ item.description|slice(0,80) ~ '...' }}</p>
+
+                    <div class="flex flex-wrap gap-2 mt-2">
+                <span class="badge badge-secondary gap-1">
+                    {{ item.category.parent.name }} > {{ item.category.name }}
+                </span>
+    {#  TODO AJOUTER COMME KIT UN CHAMP STATS POUR RECUPERER LES DATAS VARIANTS (RANGE POIDS, PRIX) ??? Variants dispo ... #}
+    {#                            <span class="badge badge-outline">Weight: {{ item.weight }} g</span>#}
+    {#                            <span class="badge badge-outline">Price: {{ item.price|number_format(2, '.', ' ') }} €</span>#}
+                    </div>
+                    <div class="flex items-center justify-between mt-4">
+                        {% if item.createdBy %}
+                            {# TODO CHANGE LINK TO PROFILE LINK WHEN AVAILABLE #}
+                            <a href="{{ path('app_kit_edit', {'id': item.createdBy.id}) }}" class="avatar tooltip" data-tip="{{ item.createdBy.username }}">
+                                <div class="w-10 rounded-full border border-primary">
+                                    <img src="{{ item.createdBy.avatar }}" alt="{{ item.createdBy.username }}">
+                                </div>
+                            </a>
+                        {% endif %}
+                        <a href="{{ path('app_item_show', {'id': item.id}) }}" class="btn btn-primary btn-sm">Show details</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="col-span-full text-neutral text-center">No item available yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
