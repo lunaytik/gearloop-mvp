@@ -23,12 +23,10 @@
         <h3 class="text-lg font-bold">Kit Items</h3>
         <button type="button" class="btn btn-primary mt-2" id="add-kititem" {{ stimulus_action('form-collection', 'addCollectionElement') }}>Add Item</button>
     </div>
-    <div class="kit-items grid grid-cols-1 lg:grid-cols-2 gap-8" {{ stimulus_target('form-collection', 'collectionContainer') }}>
+    <div class="collection grid grid-cols-1 lg:grid-cols-2 gap-8" {{ stimulus_target('form-collection', 'collectionContainer') }}>
         {% for kitItem in form.kitItems %}
             <div class="flex flex-col gap-2 p-4 bg-base-200 border border-base-300 rounded-field">
-                {{ form_row(kitItem.variant) }}
-                {{ form_row(kitItem.quantity) }}
-                {{ form_row(kitItem.personalNotes) }}
+                {{ form_widget(kitItem, {'attr': {'class': 'flex flex-col gap-2'}}) }}
             </div>
         {% endfor %}
     </div>

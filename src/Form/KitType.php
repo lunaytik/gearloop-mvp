@@ -47,6 +47,9 @@ class KitType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'prototype_options' => [
+                    'attr' => ['class' => 'flex flex-col gap-2'],
+                ]
             ]);
     }
 
