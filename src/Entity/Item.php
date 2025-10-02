@@ -99,7 +99,7 @@ class Item
     /**
      * @var Collection<int, ItemVariant>
      */
-    #[ORM\OneToMany(targetEntity: ItemVariant::class, mappedBy: 'item', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: ItemVariant::class, mappedBy: 'item', cascade: ['persist'], orphanRemoval: true)]
     private Collection $itemVariants;
 
     public function __construct()
