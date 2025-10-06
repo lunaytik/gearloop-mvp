@@ -97,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Kit>
      */
-    #[ORM\OneToMany(targetEntity: Kit::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Kit::class, mappedBy: 'owner', cascade: ['remove'])]
     private Collection $kits;
 
     public function __construct()

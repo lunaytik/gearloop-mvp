@@ -1,0 +1,101 @@
+{% extends '/base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+<div class="grid gap-8">
+    <div class="sm:card bg-base-100 w-full sm:border sm:border-base-300 overflow-hidden max-w-3xl mx-auto">
+        <div class="flex flex-col sm:flex-row gap-4 justify-between px-6 pt-6 pb-4">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div class="avatar">
+                    <div class="w-24 h-24 rounded-full border-2 border-base-300">
+                        <img src="{{ user.avatar ?? '/images/default-avatar.png' }}" alt="{{ user.username }}">
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold">{{ user.displayName }}</h1>
+                    <p class="text-base-content/90">{{ user.experienceLevel.label }}</p>
+                    <p class="text-base-content/80">📍 {{ user.location|default('Not specified') }}</p>
+                </div>
+            </div>
+            <div class="flex flex-row gap-2">
+                {% if app.user and app.user.id == user.id %}
+                    <a href="{{ path('app_profile_edit') }}" class="btn flex-1 sm:flex-auto btn-primary">Edit my profile</a>
+                    <a href="{{ path('app_settings_show') }}" class="btn flex-1 sm:flex-auto btn-outline">Settings</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="px-6 pb-6 text-base-content/70">
+            <p>Member since {{ user.createdAt|date('F Y') }}</p>
+        </div>
+        {% if user.bio %}
+            <div class="card-body border-t border-base-300">
+                <p class="italic text-neutral">"{{ user.bio }}"</p>
+            </div>
+        {% endif %}
+        {#<div class="card-body border-t border-base-300">
+            <h2 class="text-xl font-medium">Statistics</h2>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <div>
+                    <p class="text-2xl font-bold">{{ user.kits.count }}</p>
+                    <h3 class="text-xl">Kits Created</h3>
+                </div>
+            </div>
+        </div>#}
+    </div>
+
+{#  TODO CHANGE CARDS TO COMPONENT FOR EASIER CHANGES  #}
+    <div>
+        <div class="flex justify-between">
+            <h2 class="text-2xl font-bold pb-4">Last created kits</h2>
+            <a class="btn btn-link" href="{{ path('app_kit_index') }}">See all</a>
+        </div>
+        <div class="grid grid-cols-1 gap-4">
+            {% for kit in user.kits %}
+                <div
+                    class="card bg-base-100 text-base-content shadow-md border border-base-300
+                hover:shadow-lg hover:bg-base-200/50 transition duration-300 w-full overflow-hidden cursor-pointer"
+                    onclick="window.location='{{ path('app_kit_show', {'slug': kit.slug}) }}'"
+                >
+                    <div class="card-body">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="card-title text-xl font-bold">{{ kit.name }}</h2>
+                                <p class="text-base-content/80 mt-1">{{ kit.description }}</p>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <div class="flex gap-2">
+                                    <span class="badge badge-outline {{ kit.public ? 'badge-success' : 'badge-error' }}">{{ kit.public ? 'Public' : 'Private' }}</span>
+                                    <span class="badge badge-neutral">{{ kit.activityType.label }}</span>
+                                    <span class="badge badge-primary">{{ kit.season.label }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
+                            {% if kit.stats != null %}
+                                <div class="space-y-1">
+                                    <p class="text-lg font-medium text-base-content/80">Items in the kit</p>
+                                    <p class="text-lg">{{ kit.stats.items_count }} ({{ kit.stats.unique_items_count }} uniques)</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-lg font-medium text-base-content/80">Price of the kit</p>
+                                    <p class="text-lg">{{ kit.stats.total_price|round(2) }}€</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-lg font-medium text-base-content/80">Weight of the kit</p>
+                                    <p class="text-lg">{{ kit.stats.total_weight|round(2) }}g</p>
+                                </div>
+                            {% endif %}
+                            <div class="space-y-1">
+                                <p class="font-medium text-base-content/80">Updated</p>
+                                <p>{{ kit.updatedAt|date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
