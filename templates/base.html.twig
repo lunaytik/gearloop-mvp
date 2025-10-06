@@ -10,8 +10,8 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
-        <header class="navbar bg-base-200 shadow-sm p-4">
+    <body class="bg-base-200 min-h-screen">
+        <header class="navbar bg-base-100 shadow-sm p-4">
             <div class="flex-1">
                 <a class="text-xl link link-hover" href="{{ path('app_home_index') }}">BackpackShare</a>
             </div>
@@ -23,7 +23,7 @@
                     </li>
                     <li class="flex items-center gap-4">
                         {% if app.user %}
-                            <div>{{ app.user.username }} ({{ app.user.email }})</div>
+                            <a class="link link-hover" href="{{ path('app_profile_show') }}">{{ app.user.username }} ({{ app.user.email }})</a>
                             <a class="link link-hover" href="{{ path('app_logout') }}">Logout</a>
                         {% else %}
                             <a class="link link-hover" href="{{ path('app_login') }}">Login</a>
@@ -33,7 +33,7 @@
                 </ul>
             </nav>
         </header>
-        <main class="container px-4 sm:px-0 sm:mx-auto pt-4">
+        <main class="container max-w-6xl px-0 sm:px-4 sm:mx-auto sm:pt-4">
             {% block body %}{% endblock %}
         </main>
     </body>

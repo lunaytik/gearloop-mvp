@@ -1,0 +1,15 @@
+{{ form_start(form, {'attr': {'class': 'flex flex-col gap-4 pt-4 lg:mx-auto'}}) }}
+    <div class="flex flex-col md:flex-row gap-4">
+        {{ form_row(form.displayName, {'row_attr': {'class': 'flex-1'}}) }}
+        {{ form_row(form.avatar, {'row_attr': {'class': 'flex-1'}}) }}
+    </div>
+    {{ form_row(form.bio) }}
+    <div class="flex flex-col gap-4 md:flex-row">
+        {{ form_row(form.location, {'row_attr': {'class': 'flex-1'}}) }}
+        {{ form_row(form.experienceLevel, {'row_attr': {'class': 'flex-1'}}) }}
+    </div>
+
+    {{ form_widget(form)}}
+
+    <button type="submit" class="btn btn-success lg:w-50 lg:self-start">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
