@@ -1,0 +1,6 @@
+{{ form_start(form, {'attr': {'class': 'flex flex-col gap-4 pt-4 lg:mx-auto'}}) }}
+    <div class="flex flex-col md:flex-row gap-4">
+        {{ form_widget(form, {'row_attr': {'class': 'flex-1'}}) }}
+    </div>
+    <button type="submit" class="btn btn-success lg:w-50 lg:self-start">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
