@@ -2,8 +2,6 @@
 # Production environment override
 services:
   php:
-    env_file:
-      - .env.prod
     restart: unless-stopped
     build:
       context: .
@@ -15,7 +13,6 @@ services:
     volumes:
       - app_uploads:/app/public/uploads:rw
       - ./logs/app:/app/var/log:rw
-
   database:
     restart: unless-stopped
     volumes:
