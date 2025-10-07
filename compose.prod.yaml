@@ -2,6 +2,7 @@
 # Production environment override
 services:
   php:
+    restart: unless-stopped
     build:
       context: .
       target: frankenphp_prod
@@ -9,3 +10,18 @@ services:
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+    volumes:
+      - app_uploads:/app/public/uploads:rw
+      - ./logs/app:/app/var/log:rw
+
+  database:
+    restart: unless-stopped
+    volumes:
+      - ./backups:/backups:rw
+
+  redis:
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+
+volumes:
+  app_uploads:
