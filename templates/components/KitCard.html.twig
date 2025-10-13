@@ -1,0 +1,51 @@
+<div
+    class="card bg-base-100 text-base-content border border-base-300
+        hover:bg-base-300 transition duration-300 w-full overflow-hidden cursor-pointer
+        {{ attributes.render('class') }}
+    "
+    onclick="window.location='{{ path('app_kit_show', {'slug': kit.slug}) }}'"
+    {{ attributes }}
+>
+    <div class="card-body">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h2 class="card-title text-xl font-bold">{{ kit.name }}</h2>
+                <p class="text-base-content/80 mt-1">{{ kit.description }}</p>
+            </div>
+            <div class="flex gap-4 items-center">
+                <div class="flex gap-2">
+                    <span class="badge badge-outline {{ kit.public ? 'badge-success' : 'badge-error' }}">{{ kit.public ? 'Public' : 'Private' }}</span>
+                    <span class="badge badge-neutral">{{ kit.activityType.label }}</span>
+                    <span class="badge badge-primary">{{ kit.season.label }}</span>
+                </div>
+                {# TODO:: ON USER PROFILE CONTROLLER ROUTE ADD LINK #}
+                {#<a href="{{ path('app_home_index') }}" class="avatar tooltip tooltip-bottom" data-tip="{{ kit.owner.username }}">
+                    <div class="w-12 rounded-full">
+                        <img src="{{ kit.owner.avatar }}" alt="{{ kit.owner.username }} avatar">
+                    </div>
+                </a>#}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
+            {% if kit.stats != null %}
+                <div class="space-y-1">
+                    <p class="text-lg font-medium text-base-content/80">Items in the kit</p>
+                    <p class="text-lg">{{ kit.stats.items_count }} ({{ kit.stats.unique_items_count }} uniques)</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-lg font-medium text-base-content/80">Price of the kit</p>
+                    <p class="text-lg">{{ kit.stats.total_price|round(2) }}€</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-lg font-medium text-base-content/80">Weight of the kit</p>
+                    <p class="text-lg">{{ kit.stats.total_weight|round(2) }}g</p>
+                </div>
+            {% endif %}
+            <div class="space-y-1">
+                <p class="font-medium text-base-content/80">Updated</p>
+                <p>{{ kit.updatedAt|date }}</p>
+            </div>
+        </div>
+    </div>
+</div>
