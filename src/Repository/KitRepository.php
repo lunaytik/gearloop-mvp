@@ -16,6 +16,17 @@ class KitRepository extends ServiceEntityRepository
         parent::__construct($registry, Kit::class);
     }
 
+    public function findByCreatedAt(?int $limit = 10): array
+    {
+        return $this->createQueryBuilder('k')
+            ->where('k.isPublic = true')
+            ->orderBy('k.createdAt', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Kit[] Returns an array of Kit objects
     //     */
