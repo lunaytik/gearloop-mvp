@@ -5,7 +5,7 @@
 {% block body %}
     <div class="p-6 flex flex-col gap-6">
         <div
-            class="card w-full border border-base-300 shadow-sm overflow-hidden"
+            class="card w-full bg-base-100 border border-base-300 overflow-hidden"
         >
             <div class="card-body flex flex-col sm:flex-row gap-4">
                 {% if item.imageUrl %}
@@ -51,11 +51,11 @@
         </div>
 
         {# === Specifications === #}
-        <div class="card w-full border border-base-300 shadow-sm p-6">
+        <div class="card w-full bg-base-100 border border-base-300 p-6">
             <h2 class="text-xl font-bold text-primary mb-4">Specifications</h2>
             {% if item.specifications is not empty %}
                 <div class="overflow-x-auto">
-                    <table class="table table-zebra w-full">
+                    <table class="table table-zebra w-full border-y border-base-300">
                         <tbody>
                         {% for key, value in item.specifications %}
                             <tr>
@@ -78,12 +78,12 @@
         </div>
 
         {# === Variants === #}
-        <div class="card w-full border border-base-300 shadow-sm p-6">
+        <div class="card w-full bg-base-100 border border-base-300 p-6">
             <h2 class="text-xl font-bold text-primary mb-4">Available Variants</h2>
             {% if item.itemVariants is not empty %}
                 <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {% for variant in item.itemVariants %}
-                        <div class="card bg-base-200/70 border border-base-300 shadow-sm hover:shadow-md transition">
+                        <div class="card bg-base-200/70 border border-base-300 hover:shadow-md transition">
                             <div class="card-body">
                                 <h3 class="card-title text-lg text-primary">{{ variant.name }}</h3>
                                 <p class="text-sm text-neutral">Weight : {{ variant.weight }} g</p>
