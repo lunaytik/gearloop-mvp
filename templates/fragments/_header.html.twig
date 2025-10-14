@@ -1,0 +1,25 @@
+<header class="navbar bg-base-100 shadow-sm p-4 z-10">
+    <div class="flex-1">
+        <a class="text-xl link link-hover block w-fit" href="{{ path('app_home_index') }}">
+            <img class="h-10" src="{{ asset('images/logo_only.svg') }}" alt="Gearloop Logo">
+        </a>
+    </div>
+    <nav class="hidden sm:block">
+        <ul class="flex gap-8 justify-between">
+            <li class="flex items-center gap-4">
+                <a class="link link-hover" href="{{ path('app_explore_index') }}">Explore</a>
+                <a class="link link-hover" href="{{ path('app_kit_index') }}">My Kits</a>
+                <a class="link link-hover" href="{{ path('app_item_index') }}">Items</a>
+            </li>
+            <li class="flex items-center gap-4">
+                {% if app.user %}
+                    <a class="link link-hover" href="{{ path('app_profile_show') }}">{{ app.user.username }} ({{ app.user.email }})</a>
+                    <a class="link link-hover" href="{{ path('app_logout') }}">Logout</a>
+                {% else %}
+                    <a class="link link-hover" href="{{ path('app_login') }}">Login</a>
+                    <a class="link link-hover" href="{{ path('app_register') }}">Register</a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+</header>

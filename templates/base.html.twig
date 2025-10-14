@@ -2,7 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}BackpackShare{% endblock %}</title>
+        <title>{% block title %}Gearloop{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/logo.ico') }}">
         {% block stylesheets %}
         {% endblock %}
 
@@ -10,31 +11,12 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="bg-base-200 min-h-screen">
-        <header class="navbar bg-base-100 shadow-sm p-4">
-            <div class="flex-1">
-                <a class="text-xl link link-hover" href="{{ path('app_home_index') }}">BackpackShare</a>
-            </div>
-            <nav class="hidden sm:block">
-                <ul class="flex gap-8 justify-between">
-                    <li class="flex items-center gap-4">
-                        <a class="link link-hover" href="{{ path('app_kit_index') }}">Explore</a>
-                        <a class="link link-hover" href="{{ path('app_item_index') }}">Items</a>
-                    </li>
-                    <li class="flex items-center gap-4">
-                        {% if app.user %}
-                            <a class="link link-hover" href="{{ path('app_profile_show') }}">{{ app.user.username }} ({{ app.user.email }})</a>
-                            <a class="link link-hover" href="{{ path('app_logout') }}">Logout</a>
-                        {% else %}
-                            <a class="link link-hover" href="{{ path('app_login') }}">Login</a>
-                            <a class="link link-hover" href="{{ path('app_register') }}">Register</a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </nav>
-        </header>
-        <main class="container max-w-6xl px-0 sm:px-4 sm:mx-auto sm:pt-4">
+    <body class="flex flex-col bg-base-200 min-h-screen">
+        {{ include('fragments/_header.html.twig') }}
+        {% block hero %}{% endblock %}
+        <main class="container max-w-6xl px-0 sm:px-6 sm:mx-auto sm:py-6 flex-grow">
             {% block body %}{% endblock %}
         </main>
+        {{ include('fragments/_footer.html.twig') }}
     </body>
 </html>
