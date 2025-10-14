@@ -48,52 +48,11 @@
     <div>
         <div class="flex justify-between">
             <h2 class="text-2xl font-bold pb-4">Last created kits</h2>
-            <a class="btn btn-link" href="{{ path('app_kit_index') }}">See all</a>
+            <a class="link link-hover" href="{{ path('app_kit_index') }}">See all</a>
         </div>
         <div class="grid grid-cols-1 gap-4">
             {% for kit in user.kits %}
-                <div
-                    class="card bg-base-100 text-base-content shadow-md border border-base-300
-                hover:shadow-lg hover:bg-base-200/50 transition duration-300 w-full overflow-hidden cursor-pointer"
-                    onclick="window.location='{{ path('app_kit_show', {'slug': kit.slug}) }}'"
-                >
-                    <div class="card-body">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h2 class="card-title text-xl font-bold">{{ kit.name }}</h2>
-                                <p class="text-base-content/80 mt-1">{{ kit.description }}</p>
-                            </div>
-                            <div class="flex gap-4 items-center">
-                                <div class="flex gap-2">
-                                    <span class="badge badge-outline {{ kit.public ? 'badge-success' : 'badge-error' }}">{{ kit.public ? 'Public' : 'Private' }}</span>
-                                    <span class="badge badge-neutral">{{ kit.activityType.label }}</span>
-                                    <span class="badge badge-primary">{{ kit.season.label }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
-                            {% if kit.stats != null %}
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Items in the kit</p>
-                                    <p class="text-lg">{{ kit.stats.items_count }} ({{ kit.stats.unique_items_count }} uniques)</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Price of the kit</p>
-                                    <p class="text-lg">{{ kit.stats.total_price|round(2) }}€</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Weight of the kit</p>
-                                    <p class="text-lg">{{ kit.stats.total_weight|round(2) }}g</p>
-                                </div>
-                            {% endif %}
-                            <div class="space-y-1">
-                                <p class="font-medium text-base-content/80">Updated</p>
-                                <p>{{ kit.updatedAt|date }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <twig:KitCard kit="{{ kit }}" />
             {% endfor %}
         </div>
     </div>
