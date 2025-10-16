@@ -14,8 +14,14 @@ final class HomeController extends AbstractController
     public function index(KitRepository $kitRepository, ItemRepository $itemRepository): Response
     {
         return $this->render('home/index.html.twig', [
-            'kitsLastCreated' => $kitRepository->findByCreatedAt(5),
-            'itemLastCreated' => $itemRepository->findLastValidatedItems(9)
+            'lastCreatedKits' => $kitRepository->findPublicKits([
+                'limit' => 3,
+                'sort' => 'latest'
+            ]),
+            'lastCreatedItems' => $itemRepository->findActiveItems([
+                'limit' => 9,
+                'sort' => 'latest'
+            ])
         ]);
     }
 }

@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Home{% endblock %}
+
 {% block hero %}
     <div
         class="h-[30vh] relative flex justify-around "
@@ -12,17 +14,23 @@
 {% block body %}
     <div class="grid gap-12 py-8">
         <div class="grid gap-4">
-            <h2 class="text-4xl font-bold">Last created kits</h2>
+            <div class="flex justify-between">
+                <h2 class="text-3xl font-bold">Last Created Kits</h2>
+                <a class="link link-hover" href="{{ path('app_explore_index') }}">See all</a>
+            </div>
             <div class="grid grid-cols-1 gap-4">
-                {% for kit in kitsLastCreated %}
+                {% for kit in lastCreatedKits %}
                     <twig:KitCard kit="{{ kit }}" />
                 {% endfor %}
             </div>
         </div>
         <div class="grid gap-4">
-            <h2 class="text-4xl font-bold">Last featured items</h2>
+            <div class="flex justify-between">
+                <h2 class="text-3xl font-bold">Last Featured Items</h2>
+                <a class="link link-hover" href="{{ path('app_item_index') }}">See all</a>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {% for item in itemLastCreated %}
+                {% for item in lastCreatedItems %}
                     <twig:ItemCard item="{{ item }}" />
                 {% endfor %}
             </div>
