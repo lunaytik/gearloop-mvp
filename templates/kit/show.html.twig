@@ -20,7 +20,7 @@
             <div class="card-body bg-base-100 px-4 py-6">
                 <p class="text-base-content/80 mb-4">{{ kit.description }}</p>
                 <div class="flex flex-wrap gap-4 mb-4 text-sm">
-                <span class="badge badge-outline {{ kit.isPublic ? 'badge-success' : 'badge-error' }}">
+                <span class="badge {{ kit.isPublic ? 'badge-success' : 'badge-error' }}">
                     {{ kit.isPublic ? 'Public' : 'Private' }}
                 </span>
                     <span class="badge badge-primary">{{ kit.activityType.label }}</span>
@@ -74,7 +74,10 @@
                         </div>
                         <p>Count: {{ data.count }}</p>
                         <p>Price: ${{ data.price|number_format(2) }}</p>
-                        <p>Weight: {{ data.weight }} g ({{ data.weight_percentage }}%)</p>
+                        {# TO REPLACE #}
+                        {% if data.weight > 0 %}
+                            <p>Weight: {{ data.weight }} g ({{ data.weight_percentage }}%)</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
