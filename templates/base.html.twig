@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Gearloop{% endblock %}</title>
+        <title>Gearloop - {% block title %}{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('/images/logo.ico') }}">
         {% block stylesheets %}
         {% endblock %}
@@ -14,7 +14,7 @@
     <body class="flex flex-col bg-base-200 min-h-screen">
         {{ include('fragments/_header.html.twig') }}
         {% block hero %}{% endblock %}
-        <main class="container max-w-6xl px-0 sm:px-6 sm:mx-auto sm:py-6 flex-grow">
+        <main class="container max-w-6xl px-0 sm:px-6 sm:mx-auto py-6 flex-grow">
             {% block body %}{% endblock %}
         </main>
         {{ include('fragments/_footer.html.twig') }}
