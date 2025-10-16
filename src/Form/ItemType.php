@@ -21,6 +21,7 @@ class ItemType extends AbstractType
     {
         // Need to set model transformer before to avoid symfony form to receive an array instead of a formatted JSON string
         $specs = $builder->create('specifications', TextareaType::class, [
+            'label' => 'Specifications (JSON)',
             'attr' => ['class' => 'textarea w-full', 'rows' => 10],
         ]);
         $specs->addModelTransformer(new JsonTransformer());
