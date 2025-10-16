@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Explore Community Kits{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col gap-4">
+        <div class="px-4 sm:px-0">
+            <h1 class="text-3xl font-bold">Explore Community Kits</h1>
+            <p class="text-base-content/70">A total of {{ totalKits }} kits shared by the community</p>
+        </div>
+
+        <twig:KitList />
+    </div>
+{% endblock %}

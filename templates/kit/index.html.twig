@@ -1,17 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Kit - Index{% endblock %}
+{% block title %}My Kits{% endblock %}
 
 {% block body %}
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6">
-        <h1 class="text-3xl font-bold">Kit Index</h1>
-        <a class="btn btn-outline" href="{{ path('app_kit_new') }}">Create new</a>
-    </div>
-    <div class="flex flex-col gap-6 p-6">
-        {% for kit in kits %}
-            <twig:KitCard kit="{{ kit }}" />
-        {% else %}
-            <p class="text-gray-500 col-span-full">No kits found.</p>
-        {% endfor %}
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-0">
+            <h1 class="text-3xl font-bold">My Kits</h1>
+            <a class="btn btn-outline" href="{{ path('app_kit_new') }}">Create new</a>
+        </div>
+        <div class="flex flex-col gap-6">
+            <twig:KitList currentUser="true" />
+        </div>
     </div>
 {% endblock %}

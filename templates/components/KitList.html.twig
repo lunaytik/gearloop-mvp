@@ -1,0 +1,96 @@
+<div{{ attributes }}>
+    <div class="card bg-base-100 mb-6">
+        <div class="card-body">
+            <div class="grid grid-cols-1 sm:grid-cols- md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <input type="search"
+                       data-model="debounce(250)|search"
+                       placeholder="Search..."
+                       class="input w-full"
+                >
+
+                <label class="select w-full">
+                    <span class="label">Activity</span>
+                    <select data-model="activity">
+                        <option value="">All</option>
+                        <option value="day_hike">Day Hike</option>
+                        <option value="bivouac">Bivouac</option>
+                        <option value="trek">Trek</option>
+                    </select>
+                </label>
+
+                <label class="select w-full">
+                    <span class="label">Season</span>
+                    <select data-model="season">
+                        <option value="">All</option>
+                        <option value="winter">Winter</option>
+                        <option value="spring">Spring</option>
+                        <option value="summer">Summer</option>
+                        <option value="autumn">Autumn</option>
+                        <option value="3_seasons">3 Seasons</option>
+                        <option value="4_seasons">4 Seasons</option>
+                    </select>
+                </label>
+
+                <label class="select w-full">
+                    <span class="label">Sort</span>
+                    <select data-model="sort" class="select w-full">
+                        <option value="latest">Latest</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                    </select>
+                </label>
+
+                {% if this.currentUser %}
+                    <label class="select w-full">
+                        <span class="label">Visibility</span>
+                        <select data-model="visibility" class="select w-full">
+                            <option value="">All</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </label>
+                {% endif %}
+
+                <button class="btn btn-primary {% if not this.filters %}btn-disabled hidden{% endif %}" {{ live_action('resetFilters') }}>Reset Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid gap-6">
+        {% for kit in this.kits %}
+            <twig:KitCard kit="{{ kit }}" />
+        {% endfor %}
+        {% if this.kits is empty %}
+            <div class="text-center font-medium h-full">
+                No kit found with these filters. Try something else.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="w-full rounded-box bg-base-100 px-4 py-2 text-center mt-4">
+        <div class="join">
+            <button
+                class="join-item btn {% if page == 1 %}btn-disabled{% endif %}"
+                data-action="live#update"
+                data-model="page"
+                data-value="{{ page - 1 }}"
+            >
+                <div class="size-4">
+                    {{ ux_icon('lucide:arrow-left') }}
+                </div>
+            </button>
+            <p class="join-item btn btn-active">Page {{ page }}</p>
+            <button
+                class="join-item btn {% if this.maxPage == page or this.maxPage == 0 %}btn-disabled{% endif %}"
+                data-action="live#update"
+                data-model="page"
+                data-value="{{ page + 1 }}"
+            >
+                <div class="size-4">
+                    {{ ux_icon('lucide:arrow-right') }}
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
