@@ -1,0 +1,100 @@
+<div{{ attributes }}>
+    <div class="card bg-base-100 mb-6">
+        <div class="card-body">
+            <div class="grid grid-cols-1 sm:grid-cols- md:grid-cols-3 gap-4">
+                <input type="search"
+                       data-model="debounce(250)|search"
+                       placeholder="Search..."
+                       class="input w-full"
+                >
+
+                <label class="select w-full">
+                    <span class="label">Category</span>
+                    <select data-model="rootCategory">
+                        <option value="">All</option>
+                        {% for category in this.rootCategories %}
+                            <option value="{{ category.slug }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                {% if this.rootCategory %}
+                    <label class="select w-full">
+                        <span class="label">Subcategory</span>
+                        <select data-model="subcategory">
+                            <option value="">All</option>
+                            {% for category in this.subCategories %}
+                                <option value="{{ category.slug }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                {% endif %}
+
+                <label class="select w-full">
+                    <span class="label">Sort</span>
+                    <select data-model="sort" class="select w-full">
+                        <option value="latest">Latest</option>
+                        <option value="a-z">A-Z</option>
+                        <option value="z-a">Z-A</option>
+                    </select>
+                </label>
+
+                {% if false %}
+                    <label class="select w-full">
+                        <span class="label">Status</span>
+                        <select data-model="status" class="select w-full">
+                            <option value="">All</option>
+                            <option value="public">Verified</option>
+                            <option value="private">Pending</option>
+                            <option value="private">Refused</option>
+                        </select>
+                    </label>
+                {% endif %}
+
+                <button
+                    class="btn btn-primary {% if not this.filters %}btn-disabled hidden{% endif %}"
+                    {{ live_action('resetFilters') }}
+                >
+                    Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for item in this.items %}
+            <twig:ItemCard item="{{ item }}" />
+        {% endfor %}
+        {% if this.items is empty %}
+            <div class="text-center font-medium h-full col-span-full">
+                No item found with these filters. Try something else.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="w-full rounded-box bg-base-100 px-4 py-2 text-center mt-6">
+        <div class="join">
+            <button
+                class="join-item btn {% if page == 1 %}btn-disabled{% endif %}"
+                data-action="live#update"
+                data-model="page"
+                data-value="{{ page - 1 }}"
+            >
+                <div class="size-4">
+                    {{ ux_icon('lucide:arrow-left') }}
+                </div>
+            </button>
+            <p class="join-item btn btn-active">Page {{ page }}</p>
+            <button
+                class="join-item btn {% if this.maxPage == page or this.maxPage == 0 %}btn-disabled{% endif %}"
+                data-action="live#update"
+                data-model="page"
+                data-value="{{ page + 1 }}"
+            >
+                <div class="size-4">
+                    {{ ux_icon('lucide:arrow-right') }}
+                </div>
+            </button>
+        </div>
+    </div>
+</div>

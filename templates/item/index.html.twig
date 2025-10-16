@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Item - Index{% endblock %}
+{% block title %}Items Database{% endblock %}
 
 {% block body %}
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6">
-        <h1 class="text-3xl font-bold">Item Index</h1>
-        <a class="btn btn-outline" href="{{ path('app_item_new') }}">Create new</a>
-    </div>
-    <div class="grid gap-6 p-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {% for item in items %}
-            <twig:ItemCard item="{{ item }}" />
-        {% else %}
-            <p class="col-span-full text-neutral text-center">No item available yet.</p>
-        {% endfor %}
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-0">
+            <div>
+                <h1 class="text-3xl font-bold">Items Database</h1>
+                <p class="text-base-content/70">A total of {{ totalItems }} items created by the community to make your kits</p>
+            </div>
+            <a class="btn btn-outline" href="{{ path('app_item_new') }}">Create New Suggestion</a>
+        </div>
+
+        <twig:ItemList />
     </div>
 {% endblock %}

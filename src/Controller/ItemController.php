@@ -21,7 +21,7 @@ final class ItemController extends AbstractController
     public function index(ItemRepository $itemRepository): Response
     {
         return $this->render('item/index.html.twig', [
-            'items' => $itemRepository->findAll(),
+            'totalItems' => $itemRepository->countActiveItems()
         ]);
     }
 
@@ -40,6 +40,8 @@ final class ItemController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $itemVariant->getName() ?? $itemVariant->setName("Default");
+
+            $item->setCreatedBy($this->getUser());
 
             $entityManager->persist($item);
             $entityManager->flush();
