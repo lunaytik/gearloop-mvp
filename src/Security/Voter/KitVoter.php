@@ -17,7 +17,7 @@ final class KitVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::DELETE, self::VIEW])
-            && $subject instanceof \App\Entity\Kit;
+            && $subject instanceof Kit;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
@@ -25,7 +25,7 @@ final class KitVoter extends Voter
         $user = $token->getUser();
 
         // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof UserInterface && $attribute !== self::VIEW) {
             return false;
         }
 
