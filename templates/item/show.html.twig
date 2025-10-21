@@ -17,10 +17,13 @@
                     <div class="flex items-center justify-between">
                         <h1 class="text-3xl  font-bold text-primary">{{ item.name }}</h1>
                         {% if item.createdBy %}
-                            {# TODO CHANGE LINK TO PROFILE LINK WHEN AVAILABLE #}
-                            <a href="{{ path('app_item_show', {'id': item.createdBy.id ?? 0}) }}" class="avatar tooltip" data-tip="{{ item.createdBy.username ?? '' }}">
+                            <a href="{{ path('app_item_show', { 'id': item.createdBy.id }) }}" class="avatar tooltip tooltip-bottom" data-tip="{{ item.createdBy.displayName }}">
                                 <div class="w-12 rounded-full border border-base-300">
-                                    <img src="{{ item.createdBy.avatar ?? '' }}" alt="{{ item.createdBy.username ?? '' }}">
+                                    {% if item.createdBy.avatar %}
+                                        <img src="{{ item.createdBy.avatar }}" alt="{{ item.createdBy.username }}">
+                                    {% else %}
+                                        {{ ux_icon('lucide:user-round') }}
+                                    {% endif %}
                                 </div>
                             </a>
                         {% endif %}
@@ -32,17 +35,24 @@
                             <i class="iconify" data-icon="{{ item.category.icon ?? 'mdi:package-variant' }}"></i>
                             {{ item.category.name }}
                         </span>
+                        <span class="badge {{ item.status.value == 'validated' ? 'badge-success' : item.status.value == 'pending' ? 'badge-info' : 'badge-error'}}">{{ item.status.label }}</span>
             {#  TODO AJOUTER COMME KIT UN CHAMP STATS POUR RECUPERER LES DATAS VARIANTS (RANGE POIDS, PRIX) ??? Variants dispo ... #}
             {#                    <span class="badge badge-outline">Poids: {{ item.weight }} g</span>#}
             {#                    <span class="badge badge-outline">Prix: {{ item.price|number_format(2, '.', ' ') }} €</span>#}
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 justify-between items-center">
                         <p class="text-base-content/70 text-sm">Updated {{ item.updatedAt|date }}</p>
-                        {% if true %}
+                        {% if app.user and app.user.admin or item.createdBy == app.user and item.status.value == 'pending' %}
                             <div class="flex items-end gap-2">
                                 <a href="{{ path('app_item_edit', {'id': item.id}) }}"
                                    class="btn btn-primary">Edit</a>
                                 {{ include('item/_delete_form.html.twig') }}
+                            </div>
+                        {% endif %}
+                        {% if app.user and app.user.admin %}
+                            <div class="flex items-end gap-2">
+                                <a href="{{ path('app_item_validate', {'id': item.id}) }}" class="btn btn-success">Validate</a>
+                                <a href="{{ path('app_item_reject', {'id': item.id}) }}" class="btn btn-error">Reject</a>
                             </div>
                         {% endif %}
                     </div>
@@ -50,7 +60,6 @@
             </div>
         </div>
 
-        {# === Specifications === #}
         <div class="card w-full bg-base-100 border border-base-300 p-6">
             <h2 class="text-xl font-bold text-primary mb-4">Specifications</h2>
             {% if item.specifications is not empty %}
@@ -77,7 +86,6 @@
             {% endif %}
         </div>
 
-        {# === Variants === #}
         <div class="card w-full bg-base-100 border border-base-300 p-6">
             <h2 class="text-xl font-bold text-primary mb-4">Available Variants</h2>
             {% if item.itemVariants is not empty %}
