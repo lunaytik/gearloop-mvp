@@ -4,8 +4,6 @@ namespace App\Twig\Components;
 
 use App\Entity\User;
 use App\Repository\KitRepository;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -33,18 +31,15 @@ final class KitList
 
     // Get current user kits to display them on profile
     #[LiveProp(writable: false)]
-    public ?bool $currentUser = false;
+    public ?User $currentUser = null;
 
     #[LiveProp(writable: true, url: true)]
     public ?string $visibility = null;
 
     private const int ITEMS_PER_PAGE = 6;
 
-    private UserInterface $user;
-
     public function __construct(
         private KitRepository $kitRepository,
-        private Security $security
     ) {}
 
     public function getKits(): array
@@ -63,7 +58,7 @@ final class KitList
 
         if ($this->currentUser) {
             return $this->kitRepository->findCurrentUserKits(
-                $this->security->getUser(),
+                $this->currentUser,
                 [...$criteria, 'visibility' => $this->visibility]
             );
         }
@@ -81,7 +76,7 @@ final class KitList
 
         if ($this->currentUser) {
             return $this->kitRepository->countCurrentUserKits(
-                $this->security->getUser(),
+                $this->currentUser,
                 [...$criteria, 'visibility' => $this->visibility]
             );
         }
