@@ -16,7 +16,7 @@
         <div class="grid gap-4">
             <div class="flex justify-between">
                 <h2 class="text-3xl font-bold">Last Created Kits</h2>
-                <a class="link link-hover" href="{{ path('app_explore_index') }}">See all</a>
+                <a class="link link-hover" href="{{ path('app_explore_kits') }}">See all</a>
             </div>
             <div class="grid grid-cols-1 gap-4">
                 {% for kit in lastCreatedKits %}
@@ -27,7 +27,7 @@
         <div class="grid gap-4">
             <div class="flex justify-between">
                 <h2 class="text-3xl font-bold">Last Featured Items</h2>
-                <a class="link link-hover" href="{{ path('app_item_index') }}">See all</a>
+                <a class="link link-hover" href="{{ path('app_explore_items') }}">See all</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {% for item in lastCreatedItems %}
