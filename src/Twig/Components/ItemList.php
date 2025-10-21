@@ -3,6 +3,7 @@
 namespace App\Twig\Components;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -30,6 +31,19 @@ final class ItemList
     #[LiveProp(writable: true, url: true)]
     public ?string $search = null;
 
+    // Get current user kits to display them on profile
+    #[LiveProp(writable: false)]
+    public ?User $currentUser = null;
+
+    #[LiveProp(writable: true, url: true)]
+    public ?string $status = null;
+
+    #[LiveProp(writable: false)]
+    public bool $showReset = true;
+
+    #[LiveProp(writable: false)]
+    public bool $suggestionPage = false;
+
     public const int ITEMS_PER_PAGE = 12;
 
     public function __construct(
@@ -39,23 +53,54 @@ final class ItemList
 
     public function getItems(): array
     {
-        return $this->itemRepository->findActiveItems([
+        // force page to be at least 1
+        $this->page = max(1, $this->page);
+
+        $criteria = [
             'rootCategory' => $this->retrieveCategory($this->rootCategory),
             'subcategory' => $this->retrieveCategory($this->subcategory),
             'search' => $this->search,
             'sort' => $this->sort,
             'page' => $this->page,
             'limit' => self::ITEMS_PER_PAGE,
-        ]);
+        ];
+
+        if ($this->suggestionPage) {
+            $criteria['status'] = $this->status;
+        }
+
+        if ($this->currentUser) {
+            return $this->itemRepository->findCurrentUserActiveItems(
+                $this->currentUser,
+                [...$criteria, 'status' => $this->status]
+            );
+        }
+
+        return $this->itemRepository->findActiveItems($criteria);
     }
 
     public function getItemsCount(): int
     {
-        return $this->itemRepository->countActiveItems([
+        $criteria = [
             'rootCategory' => $this->retrieveCategory($this->rootCategory),
             'subcategory' => $this->retrieveCategory($this->subcategory),
             'search' => $this->search,
-        ]);
+        ];
+
+        if ($this->suggestionPage) {
+            $criteria['status'] = $this->status;
+        }
+
+        if ($this->currentUser) {
+            return $this->itemRepository->countCurrentUserActiveItems(
+                $this->currentUser,
+                [...$criteria, 'status' => $this->status]
+            );
+        }
+
+        return $this->itemRepository->countActiveItems(
+            $criteria
+        );
     }
 
     public function getRootCategories(): array
@@ -75,16 +120,21 @@ final class ItemList
 
     public function hasFilters(): bool
     {
-        return $this->rootCategory || $this->search;
+        return $this->rootCategory || $this->subcategory || $this->search || $this->status;
     }
 
     #[LiveAction]
     public function resetFilters(): void
     {
         $this->rootCategory = null;
+        $this->subcategory = null;
         $this->sort = 'latest';
         $this->search = null;
         $this->page = 1;
+
+        if ($this->currentUser) {
+            $this->status = null;
+        }
     }
 
     private function retrieveCategory(?string $category): ?Category

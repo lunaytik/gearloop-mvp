@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Item;
+use App\Entity\User;
 use App\Enum\ItemStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Item>
@@ -23,9 +23,7 @@ class ItemRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('i')
             ->where('i.isActive = :active')
             ->andWhere('i.deletedAt IS NULL')
-            ->andWhere('i.status = :status')
             ->setParameter('active', true)
-            ->setParameter('status', ItemStatus::VALIDATED)
         ;
 
         if (!empty($criteria['rootCategory']) && empty($criteria['subcategory'])) {
@@ -45,16 +43,20 @@ class ItemRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . strtolower($criteria['search']) . '%');
         }
 
-        if(isset($criteria['sort']) && $criteria['sort'] === 'latest') {
-            $qb->orderBy('i.updatedAt', 'DESC');
+        if (!empty($criteria['status'])) {
+            $qb->andWhere('i.status = :status')
+                ->setParameter('status', ItemStatus::tryFrom($criteria['status']));
+        } else {
+            $qb->andWhere('i.status = :status')
+                ->setParameter('status', ItemStatus::VALIDATED);
         }
 
-        if(isset($criteria['sort']) && $criteria['sort'] === 'a-z') {
-            $qb->orderBy('i.name', 'ASC');
-        }
-
-        if(isset($criteria['sort']) && $criteria['sort'] === 'z-a') {
-            $qb->orderBy('i.name', 'DESC');
+        if(isset($criteria['sort'])) {
+            match ($criteria['sort']) {
+                'latest' => $qb->orderBy('i.updatedAt', 'DESC'),
+                'a-z' => $qb->orderBy('i.name', 'ASC'),
+                'z-a' => $qb->orderBy('i.name', 'DESC'),
+            };
         }
 
         // Pagination
@@ -91,22 +93,110 @@ class ItemRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . strtolower($criteria['search']) . '%');
         }
 
+        if (!empty($criteria['status'])) {
+            $qb->andWhere('i.status = :status')
+                ->setParameter('status', ItemStatus::tryFrom($criteria['status']));
+        } else {
+            $qb->andWhere('i.status = :status')
+                ->setParameter('status', ItemStatus::VALIDATED);
+        }
+
+        if(isset($criteria['sort'])) {
+            match ($criteria['sort']) {
+                'latest' => $qb->orderBy('i.updatedAt', 'DESC'),
+                'a-z' => $qb->orderBy('i.name', 'ASC'),
+                'z-a' => $qb->orderBy('i.name', 'DESC'),
+            };
+        }
+
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findCurrentUserItems(UserInterface $user, array $criteria = []): array
+    public function findCurrentUserActiveItems(User $user, array $criteria = []): array
     {
         $qb = $this->createQueryBuilder('i')
             ->where('i.createdBy = :user')
+            ->andWhere('i.isActive = :active')
+            ->andWhere('i.deletedAt IS NULL')
             ->setParameter('user', $user)
+            ->setParameter('active', true)
         ;
 
-        if (isset($criteria['status'])) {
+        if (!empty($criteria['rootCategory']) && empty($criteria['subcategory'])) {
+            $categories = $criteria['rootCategory']->getChildren();
+
+            $qb->andWhere('i.category IN(:children)')
+                ->setParameter('children', $categories)
+            ;
+        } elseif (!empty($criteria['rootCategory']) && !empty($criteria['subcategory'])) {
+            $qb->andWhere('i.category = :category')
+                ->setParameter('category', $criteria['subcategory'])
+            ;
+        }
+
+        if (isset($criteria['search'])) {
+            $qb->andWhere('LOWER(i.name) LIKE :search')
+                ->setParameter('search', '%' . strtolower($criteria['search']) . '%');
+        }
+
+        if (!empty($criteria['status'])) {
             $qb->andWhere('i.status = :status')
                 ->setParameter('status', ItemStatus::tryFrom($criteria['status']));
         }
 
+        if(isset($criteria['sort'])) {
+            match ($criteria['sort']) {
+                'latest' => $qb->orderBy('i.updatedAt', 'DESC'),
+                'a-z' => $qb->orderBy('i.name', 'ASC'),
+                'z-a' => $qb->orderBy('i.name', 'DESC'),
+            };
+        }
+
         return $qb->getQuery()->getResult();
+    }
+
+    public function countCurrentUserActiveItems(User $user, array $criteria = []): int
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->select('COUNT(i.id)')
+            ->where('i.createdBy = :user')
+            ->andWhere('i.isActive = :active')
+            ->andWhere('i.deletedAt IS NULL')
+            ->setParameter('user', $user)
+            ->setParameter('active', true)
+        ;
+
+        if (!empty($criteria['rootCategory']) && empty($criteria['subcategory'])) {
+            $categories = $criteria['rootCategory']->getChildren();
+
+            $qb->andWhere('i.category IN(:children)')
+                ->setParameter('children', $categories)
+            ;
+        } elseif (!empty($criteria['rootCategory']) && !empty($criteria['subcategory'])) {
+            $qb->andWhere('i.category = :category')
+                ->setParameter('category', $criteria['subcategory'])
+            ;
+        }
+
+        if (isset($criteria['search'])) {
+            $qb->andWhere('LOWER(i.name) LIKE :search')
+                ->setParameter('search', '%' . strtolower($criteria['search']) . '%');
+        }
+
+        if (!empty($criteria['status'])) {
+            $qb->andWhere('i.status = :status')
+                ->setParameter('status', ItemStatus::tryFrom($criteria['status']));
+        }
+
+        if(isset($criteria['sort'])) {
+            match ($criteria['sort']) {
+                'latest' => $qb->orderBy('i.updatedAt', 'DESC'),
+                'a-z' => $qb->orderBy('i.name', 'ASC'),
+                'z-a' => $qb->orderBy('i.name', 'DESC'),
+            };
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     //    /**

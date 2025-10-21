@@ -1,17 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Items Database{% endblock %}
+{% block title %}My Items{% endblock %}
 
 {% block body %}
     <div class="flex flex-col gap-4">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-0">
-            <div>
-                <h1 class="text-3xl font-bold">Items Database</h1>
-                <p class="text-base-content/70">A total of {{ totalItems }} items created by the community to make your kits</p>
-            </div>
+            <h1 class="text-3xl font-bold">My Items</h1>
             <a class="btn btn-outline" href="{{ path('app_item_new') }}">Create New Suggestion</a>
         </div>
-
-        <twig:ItemList />
+        <twig:ItemList currentUser="{{ app.user }}" />
     </div>
 {% endblock %}

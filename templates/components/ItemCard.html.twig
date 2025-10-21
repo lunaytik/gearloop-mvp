@@ -16,14 +16,20 @@
             {{ item.name }}
         </h2>
         <p class="text-sm text-neutral">{{ item.description|slice(0,80) ~ '...' }}</p>
-
         <div class="flex flex-wrap gap-2 mt-2">
-                <span class="badge badge-secondary gap-1">
+            {% if item.status.value != 'validated' %}
+                <span class="badge {{ item.status.value == 'pending' ? 'badge-info' : 'badge-error' }}">
+                    {{ item.status.label }}
+                </span>
+            {% endif %}
+        </div>
+        <div class="flex flex-wrap gap-2 mt-2">
+                <span class="badge badge-secondary">
                     {{ item.category.name }}
                 </span>
             {#  TODO AJOUTER COMME KIT UN CHAMP STATS POUR RECUPERER LES DATAS VARIANTS (RANGE POIDS, PRIX) ??? Variants dispo ... #}
-            {#                            <span class="badge badge-outline">Weight: {{ item.weight }} g</span>#}
-            {#                            <span class="badge badge-outline">Price: {{ item.price|number_format(2, '.', ' ') }} €</span>#}
+            {#  <span class="badge badge-outline">Weight: {{ item.weight }} g</span>#}
+            {#  <span class="badge badge-outline">Price: {{ item.price|number_format(2, '.', ' ') }} €</span>#}
         </div>
     </div>
 </div>
