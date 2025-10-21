@@ -7,6 +7,7 @@ use App\Entity\ItemVariant;
 use App\Enum\ItemStatus;
 use App\Form\ItemType;
 use App\Repository\ItemRepository;
+use App\Repository\KitItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,14 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/item')]
+#[Route('/items')]
 final class ItemController extends AbstractController
 {
+    #[IsGranted('IS_AUTHENTICATED')]
     #[Route(name: 'app_item_index', methods: ['GET'])]
     public function index(ItemRepository $itemRepository): Response
     {
         return $this->render('item/index.html.twig', [
-            'items' => $itemRepository->findAll(),
+            'totalItems' => $itemRepository->countActiveItems()
         ]);
     }
 
@@ -41,6 +43,8 @@ final class ItemController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $itemVariant->getName() ?? $itemVariant->setName("Default");
 
+            $item->setCreatedBy($this->getUser());
+
             $entityManager->persist($item);
             $entityManager->flush();
 
@@ -51,6 +55,13 @@ final class ItemController extends AbstractController
             'item' => $item,
             'form' => $form,
         ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/suggestions', name: 'app_item_suggestions', methods: ['GET'])]
+    public function suggestions(): Response
+    {
+        return $this->render('item/suggestions.html.twig');
     }
 
     #[Route('/{id}', name: 'app_item_show', methods: ['GET'])]
@@ -78,6 +89,26 @@ final class ItemController extends AbstractController
             'item' => $item,
             'form' => $form,
         ]);
+    }
+
+    #[IsGranted('ITEM_VALIDATION', subject: 'item')]
+    #[Route('/{id}/validate', name: 'app_item_validate', methods: ['GET'])]
+    public function validate(Item $item, EntityManagerInterface $entityManager): Response
+    {
+        $item->setStatus(ItemStatus::VALIDATED);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_item_show', ['id' => $item->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    #[IsGranted('ITEM_VALIDATION', subject: 'item')]
+    #[Route('/{id}/reject', name: 'app_item_reject', methods: ['GET'])]
+    public function reject(Item $item, EntityManagerInterface $entityManager, KitItemRepository $kitItemRepository): Response
+    {
+        $item->setStatus(ItemStatus::REJECTED);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_item_show', ['id' => $item->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[IsGranted('ITEM_DELETE', subject: 'item')]

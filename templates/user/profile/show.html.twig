@@ -9,7 +9,11 @@
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                 <div class="avatar">
                     <div class="w-24 h-24 rounded-full border-2 border-base-300">
-                        <img src="{{ user.avatar ?? '/images/default-avatar.png' }}" alt="{{ user.username }}">
+                        {% if user.avatar %}
+                            <img src="{{ user.avatar }}" alt="{{ user.username }}">
+                        {% else %}
+                            {{ ux_icon('lucide:user-round') }}
+                        {% endif %}
                     </div>
                 </div>
                 <div>
@@ -33,67 +37,42 @@
                 <p class="italic text-neutral">"{{ user.bio }}"</p>
             </div>
         {% endif %}
-        {#<div class="card-body border-t border-base-300">
-            <h2 class="text-xl font-medium">Statistics</h2>
-            <div class="flex flex-col sm:flex-row gap-4">
-                <div>
-                    <p class="text-2xl font-bold">{{ user.kits.count }}</p>
-                    <h3 class="text-xl">Kits Created</h3>
+        <div class="card-body border-t border-base-300">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-title font-medium">Created Kits</div>
+                    <div class="stat-value">{{ createdKitsCount }}</div>
+{#                    <div class="stat-desc">21% more than last month</div>#}
+                </div>
+                <div class="stat">
+                    <div class="stat-title font-medium">Created Items</div>
+                    <div class="stat-value">{{ createdItemsCount }}</div>
+                    {#                    <div class="stat-desc">21% more than last month</div>#}
                 </div>
             </div>
-        </div>#}
+        </div>
     </div>
 
-{#  TODO CHANGE CARDS TO COMPONENT FOR EASIER CHANGES  #}
     <div>
         <div class="flex justify-between">
-            <h2 class="text-2xl font-bold pb-4">Last created kits</h2>
-            <a class="btn btn-link" href="{{ path('app_kit_index') }}">See all</a>
+            <h2 class="text-3xl font-bold pb-4">Last Created Kits</h2>
+            <a class="link link-hover" href="{{ path('app_kit_index') }}">See all</a>
         </div>
         <div class="grid grid-cols-1 gap-4">
-            {% for kit in user.kits %}
-                <div
-                    class="card bg-base-100 text-base-content shadow-md border border-base-300
-                hover:shadow-lg hover:bg-base-200/50 transition duration-300 w-full overflow-hidden cursor-pointer"
-                    onclick="window.location='{{ path('app_kit_show', {'slug': kit.slug}) }}'"
-                >
-                    <div class="card-body">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h2 class="card-title text-xl font-bold">{{ kit.name }}</h2>
-                                <p class="text-base-content/80 mt-1">{{ kit.description }}</p>
-                            </div>
-                            <div class="flex gap-4 items-center">
-                                <div class="flex gap-2">
-                                    <span class="badge badge-outline {{ kit.public ? 'badge-success' : 'badge-error' }}">{{ kit.public ? 'Public' : 'Private' }}</span>
-                                    <span class="badge badge-neutral">{{ kit.activityType.label }}</span>
-                                    <span class="badge badge-primary">{{ kit.season.label }}</span>
-                                </div>
-                            </div>
-                        </div>
+            {% for kit in lastKits %}
+                <twig:KitCard kit="{{ kit }}" />
+            {% endfor %}
+        </div>
+    </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-sm">
-                            {% if kit.stats != null %}
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Items in the kit</p>
-                                    <p class="text-lg">{{ kit.stats.items_count }} ({{ kit.stats.unique_items_count }} uniques)</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Price of the kit</p>
-                                    <p class="text-lg">{{ kit.stats.total_price|round(2) }}€</p>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-lg font-medium text-base-content/80">Weight of the kit</p>
-                                    <p class="text-lg">{{ kit.stats.total_weight|round(2) }}g</p>
-                                </div>
-                            {% endif %}
-                            <div class="space-y-1">
-                                <p class="font-medium text-base-content/80">Updated</p>
-                                <p>{{ kit.updatedAt|date }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div>
+        <div class="flex justify-between">
+            <h2 class="text-3xl font-bold pb-4">Last Validated Items</h2>
+            <a class="link link-hover" href="{{ path('app_item_index') }}">See all</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for item in lastItems %}
+                <twig:ItemCard item="{{ item }}" />
             {% endfor %}
         </div>
     </div>

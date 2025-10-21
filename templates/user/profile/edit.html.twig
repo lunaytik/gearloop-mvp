@@ -1,11 +1,11 @@
 {% extends '/base.html.twig' %}
 
-{% block title %}Profile - Edit{% endblock %}
+{% block title %}Edit Profile{% endblock %}
 
 {% block body %}
     <h1 class="text-3xl font-bold">Edit Profile</h1>
 
     {{ include('user/profile/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a class="btn btn-neutral" href="{{ path('app_profile_show') }}">Back to Profile</a>
+    <a class="btn btn-neutral my-4" href="{{ path('app_profile_show') }}">Back to Profile</a>
 {% endblock %}

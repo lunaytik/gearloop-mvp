@@ -16,6 +16,7 @@ class ItemVariantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $specs = $builder->create('specifications', TextareaType::class, [
+            'label' => 'Specifications (JSON)',
             'attr' => ['class' => 'textarea w-full', 'rows' => 7],
         ]);
         $specs->addModelTransformer(new JsonTransformer());

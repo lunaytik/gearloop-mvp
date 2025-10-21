@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Items{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col gap-4">
+        <h1 class="text-3xl font-bold">Suggested Items</h1>
+        <twig:ItemList status="pending" :showReset="false" :suggestionPage="true" />
+    </div>
+{% endblock %}

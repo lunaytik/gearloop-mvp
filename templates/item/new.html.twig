@@ -3,7 +3,10 @@
 {% block title %}Item - New{% endblock %}
 
 {% block body %}
-    <h1 class="text-3xl font-bold">Create new Item</h1>
+    <div>
+        <h1 class="text-3xl font-bold">Create new Item</h1>
+        <p class="text-base-content/70">Your item will only be available after validation</p>
+    </div>
     {{ include('item/_form.html.twig') }}
     <a class="btn btn-neutral my-4" href="{{ path('app_item_index') }}">Back to list</a>
 {% endblock %}

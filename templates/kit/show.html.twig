@@ -4,23 +4,23 @@
 
 {% block body %}
     <div class="p-6 flex flex-col gap-6">
-        <div class="card w-full border border-base-300 shadow-sm overflow-hidden">
-            <div class="p-4 flex justify-between items-center">
+        <div class="card w-full bg-base-100 border border-base-300 overflow-hidden">
+            <div class="p-4 flex justify-between items-center border-b border-base-300">
                 <h1 class="text-2xl font-bold">{{ kit.name }}</h1>
                 {# TODO:: ON USER PROFILE CONTROLLER ROUTE ADD LINK #}
-                <a href="{{ path('app_kit_edit', {'id': kit.owner.id}) }}"
+                {#<a href="{{ path('app_kit_edit', {'id': kit.owner.id}) }}"
                    class="avatar tooltip tooltip-bottom"
                    data-tip="{{ kit.owner.username }}">
                     <div class="w-12 rounded-full border-2 border-white">
                         <img src="{{ kit.owner.avatar }}" alt="{{ kit.owner.username }} avatar">
                     </div>
-                </a>
+                </a>#}
             </div>
 
             <div class="card-body bg-base-100 px-4 py-6">
                 <p class="text-base-content/80 mb-4">{{ kit.description }}</p>
                 <div class="flex flex-wrap gap-4 mb-4 text-sm">
-                <span class="badge badge-outline {{ kit.isPublic ? 'badge-success' : 'badge-error' }}">
+                <span class="badge {{ kit.isPublic ? 'badge-success' : 'badge-error' }}">
                     {{ kit.isPublic ? 'Public' : 'Private' }}
                 </span>
                     <span class="badge badge-primary">{{ kit.activityType.label }}</span>
@@ -40,8 +40,7 @@
             </div>
         </div>
 
-        {# Stats card #}
-        <div class="card w-full border border-base-300 shadow-sm p-6 bg-base-100">
+        <div class="card w-full border border-base-300 p-6 bg-base-100">
             <h2 class="text-xl font-bold mb-4">Stats</h2>
             {% if kit.stats %}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -66,14 +65,19 @@
             <h3 class="text-lg font-semibold mb-2">Category Breakdown</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for category, data in kit.stats.category_breakdown %}
-                    <div class="card p-4 border border-base-300 bg-base-200/70 shadow-sm">
+                    <div class="card p-4 border border-base-300 bg-base-200/70">
                         <div class="flex items-center gap-2 mb-2">
-{#                            <span class="text-xl">{{ data.icon }}</span>#}
+                            {#{% if loop.first %}
+                            <span class="text-xl size-4">{{ ux_icon(data.icon) }}</span>
+                            {% endif %}#}
                             <span class="font-medium">{{ category }}</span>
                         </div>
                         <p>Count: {{ data.count }}</p>
                         <p>Price: ${{ data.price|number_format(2) }}</p>
-                        <p>Weight: {{ data.weight }} g ({{ data.weight_percentage }}%)</p>
+                        {# TO REPLACE #}
+                        {% if data.weight > 0 %}
+                            <p>Weight: {{ data.weight }} g ({{ data.weight_percentage }}%)</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -82,8 +86,7 @@
             {% endif %}
         </div>
 
-        {# Kit items list #}
-        <div class="card w-full border border-base-300 shadow-sm p-6 bg-base-100">
+        <div class="card w-full border border-base-300 p-6 bg-base-100">
             <h2 class="text-xl font-bold mb-4">Kit Items</h2>
             <div class="overflow-x-auto">
                 <table class="table w-full">
@@ -112,60 +115,5 @@
                 </table>
             </div>
         </div>
-
     </div>
-
-
-    {#<h1>Kit</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ kit.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ kit.name }}</td>
-            </tr>
-            <tr>
-                <th>Slug</th>
-                <td>{{ kit.slug }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ kit.description }}</td>
-            </tr>
-            <tr>
-                <th>IsPublic</th>
-                <td>{{ kit.isPublic ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Stats</th>
-                <td>{{ kit.stats ? kit.stats|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>ActivityType</th>
-                <td>{{ kit.activityType.label }}</td>
-            </tr>
-            <tr>
-                <th>Season</th>
-                <td>{{ kit.season.label }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ kit.createdAt|date }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ kit.updatedAt|date }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a class="btn btn-neutral" href="{{ path('app_kit_index') }}">back to list</a>
-
-    <a class="btn btn-info" href="{{ path('app_kit_edit', {'id': kit.id}) }}">edit</a>
-
-    {{ include('kit/_delete_form.html.twig') }}#}
 {% endblock %}

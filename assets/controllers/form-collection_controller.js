@@ -25,7 +25,7 @@ export default class extends Controller {
     {
         const item = document.createElement('div');
         item.innerHTML = this.prototypeValue.replace(/__name__/g, this.indexValue);
-        item.classList.add('flex', 'flex-col', 'gap-2', 'p-4', 'bg-base-200', 'border', 'border-base-300', 'rounded-field');
+        item.classList.add('flex', 'flex-col', 'gap-2', 'p-4', 'bg-base-100', 'border', 'border-base-300', 'rounded-field');
         this.collectionContainerTarget.appendChild(item);
         this.indexValue++;
         this.addTagFormDeleteLink(item);
