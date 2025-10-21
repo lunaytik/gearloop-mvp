@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\User\ChangePasswordType;
 use App\Form\User\ProfileType;
+use App\Repository\ItemRepository;
+use App\Repository\KitRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,10 +19,18 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 final class UserController extends AbstractController
 {
    #[Route('/profile', name: 'app_profile_show', methods: ['GET'])]
-    public function showProfile(#[CurrentUser] User $user): Response
+    public function showProfile(#[CurrentUser] User $user, KitRepository $kitRepository, ItemRepository $itemRepository): Response
     {
         return $this->render('user/profile/show.html.twig', [
             'user' => $user,
+            'lastKits' => $kitRepository->findCurrentUserKits($user, ['limit' => 3, 'sort' => 'latest']),
+            'lastItems' => $itemRepository->findCurrentUserActiveItems($user, [
+                'limit' => 3,
+                'sort' => 'latest',
+                'status' => 'validated'
+            ]),
+            'createdKitsCount' => $kitRepository->countCurrentUserKits($user),
+            'createdItemsCount' => $itemRepository->countCurrentUserActiveItems($user)
         ]);
     }
 
