@@ -3,11 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Kit;
+use App\Entity\User;
 use App\Enum\ActivityType;
 use App\Enum\Season;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Kit>
@@ -88,7 +88,7 @@ class KitRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findCurrentUserKits(UserInterface $user, array $criteria = []): array
+    public function findCurrentUserKits(User $user, array $criteria = []): array
     {
         $qb = $this->createQueryBuilder('k')
             ->where('k.owner = :user')
@@ -139,7 +139,7 @@ class KitRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function countCurrentUserKits(UserInterface $user, array $criteria = []): int
+    public function countCurrentUserKits(User $user, array $criteria = []): int
     {
         $qb = $this->createQueryBuilder('k')
             ->select('COUNT(k.id)')
