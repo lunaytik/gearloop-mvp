@@ -12,11 +12,12 @@ final class ItemVoter extends Voter
 {
     public const string EDIT = 'ITEM_EDIT';
     public const string DELETE = 'ITEM_DELETE';
+    public const string VALIDATION = 'ITEM_VALIDATION';
     public const string SOFT_DELETE = 'ITEM_SOFT_DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::DELETE, self::SOFT_DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::SOFT_DELETE, self::VALIDATION])
             && $subject instanceof \App\Entity\Item;
     }
 
@@ -37,7 +38,7 @@ final class ItemVoter extends Voter
 
         return match($attribute) {
             self::EDIT,  => $subject->getCreatedAt() === $user || $user->isAdmin(),
-            self::SOFT_DELETE, self::DELETE => $user->isAdmin(),
+            self::SOFT_DELETE, self::DELETE, self::VALIDATION => $user->isAdmin(),
             default => false
         };
     }
